@@ -8,6 +8,7 @@ var movements = 0, id_number = 0;
 var zero_i, zero_j, zero_id = 0;
 var id_celda_actual;
 var move_cell_status;
+var n = 0;
 
 function load_game()
 {
@@ -74,31 +75,34 @@ function move_cell(cell_id, cell_i, cell_j)
             aux = game_matrix[cell_i][cell_j];
             game_matrix[cell_i][cell_j] = game_matrix[cell_i - 1][cell_j];
             game_matrix[cell_i - 1][cell_j] = aux;
-
+            movements++;
         break;
         case 2:
             console.log("Derecha");
             aux = game_matrix[cell_i][cell_j];
             game_matrix[cell_i][cell_j] = game_matrix[cell_i][cell_j + 1];
             game_matrix[cell_i][cell_j + 1] = aux;
+            movements++;
         break;
         case 3:
             console.log("Abajo");
             aux = game_matrix[cell_i][cell_j];
             game_matrix[cell_i][cell_j] = game_matrix[cell_i + 1][cell_j];
             game_matrix[cell_i + 1][cell_j] = aux;
+            movements++;
         break;
         case 4:
             console.log("Izq");
             aux = game_matrix[cell_i][cell_j];
             game_matrix[cell_i][cell_j] = game_matrix[cell_i][cell_j - 1];
             game_matrix[cell_i][cell_j - 1] = aux;
+            movements++;
         break;
         default:
             break;
     }
     console.log(game_matrix);
-    movements++;
+    
     update_matrix_graphic();
     verify_game();
 }
@@ -145,7 +149,7 @@ function search_zero()
 
 function seconds()
 {
-    var n = 0;
+   
     var l = document.getElementById("seconds");
     window.setInterval(function()
     {
@@ -204,8 +208,8 @@ function set_data_player()
 function verify_game()
 {
     var estado = false;
-    var correct_elements = 0, recorrido_correcto = 0;
     var arr_correcto = new Array(matrix_size*matrix_size);
+    var arr_aux = new Array(matrix_size);
     for(i = 0; i < (matrix_size*matrix_size)-1; i++)
         arr_correcto[i] = (i+1);
     arr_correcto.push(0);
@@ -213,21 +217,20 @@ function verify_game()
     console.log(arr_correcto);
 
     for(i = 0; i < matrix_size; i++)
+    {    
+        arr_aux = new Array(matrix_size);
         for(j = 0; j < matrix_size; j++)
-            if(game_matrix[i][j] == arr_correcto[recorrido_correcto++])
-            {
-                correct_elements = true;
-                
-            }
-            else 
-            {
-                correct_elements = false;
-                break;
-                
-            }
+        {
+            arr_aux[i][j] = game_matrix[i][j];
+        }
+    }
 
-    if(correct_elements == true)
-        console.log("Exito");
-    else 
-        console.log("Sigue jugando");
+    for(i = 0; i < matrix_size; i++)
+    {
+        if(arr_aux[i] == arr_correcto[i]) estado = true;
+        else estado = false;
+    }
+
+    if(estado) alert("Ganaste con " + movimientos + "movimientos en " + n + "seegundos");
+    else console.log("Sigue jugando");
 }
