@@ -1,6 +1,6 @@
 :root
 {
-   --principal: rgba(23, 90, 156, 0.747);
+   --principal: #175a9cbe;
    --blanco: #fff;
    --color_Celda: rgb(119, 119, 122);
 }
@@ -50,8 +50,31 @@ body
 {
     margin-top: 0;
     font-size: 5rem;
-    background-color: bisque;
     color: black;
-    width: 10rem;
-    height: 10rem;
+    width: 12rem;
+    height: 7rem;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.contenedor_datos
+{
+    width: 42rem;
+    margin: auto;
+    margin-top: 2rem;
+    color: white;
+    background-color: #175a9cbe;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.datos
+{
+    font-size: 4rem;
+    margin: auto;
+    text-align: center;
 }
