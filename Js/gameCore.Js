@@ -1,7 +1,8 @@
 
-const matrix_size = 4;
-const matrix_cells_amount = matrix_size*matrix_size;
-var game_matrix = new Array(matrix_size);
+var matrix_size = 4;
+var matrix_cells_amount;
+var game_matrix;
+var arreglo_caracol;
 var id_selector = 0;
 var gamer_name;
 var movements = 0, id_number = 0;
@@ -12,8 +13,10 @@ var n = 0;
 
 function load_game()
 {
-    //get_Name();
+    get_Name();
+    get_size();
     set_matrix_values();
+    crear_arreglo_caracol();
     set_matrix_graphic();
     set_data_player();
 }
@@ -21,6 +24,8 @@ function load_game()
 function set_matrix_values()
 {
     var aux = 0;
+    game_matrix = new Array(matrix_size);
+    matrix_cells_amount = matrix_size*matrix_size;
     var random_array_number = new Array(matrix_cells_amount);
     for(i = 0; i < matrix_cells_amount; i++)
         random_array_number[i] = i;
@@ -37,15 +42,32 @@ function set_matrix_values()
     }
 }
 
+function auxfunction()
+{
+    var repeat = "1fr";
+    for(i = 0; i < matrix_size-1; i++)
+    {
+        repeat = repeat.toString() + " 1fr";
+    }
+    repeat = repeat.toString();
+    repeat = `"${repeat}"`;
+    console.log(repeat);
+    return repeat;
+}
+
 function set_matrix_graphic()
 {
+    var aux_repeat = auxfunction();
+    var aux_size = matrix_size * 11;
     for(i = 0; i < matrix_size; i++)
         for(j = 0; j < matrix_size; j++)
         {
             const cell = document.createElement("div");
             cell.id = id_number;
             const matrix_container = document.querySelector('.contenedor__juego');
-            
+            matrix_container.style.width = aux_size.toString() + "rem";
+            matrix_container.style.height = aux_size.toString() + "rem";
+            matrix_container.classList.add(`s${matrix_size}`);
             if(game_matrix[i][j] > 0)
             {
                 cell.classList.add("celda");
@@ -54,7 +76,6 @@ function set_matrix_graphic()
             cell.addEventListener("click", move_cell, false);
             cell.setAttribute("onclick", `move_cell(${id_number++}, ${i}, ${j})`)
             matrix_container.appendChild(cell);
-            
         }
     console.log(game_matrix);
 }
@@ -165,6 +186,15 @@ function get_Name()
         gamer_name = "Jugador";
 }
 
+function get_size()
+{
+    matrix_size = parseInt(prompt("Tamaño del tablero (máximo 10): "));
+    if(matrix_size > 10 || matrix_size < 4 || matrix_size == null || matrix_size == "")
+        matrix_size = 4;
+    /*background.style.gridTemplateColumns = "repeat(" + toString(matrix_size) + ", 1fr);";
+    background.style.gridTemplateRows = "repeat" + toString(matrix_size) + ", 1fr;";*/
+}
+
 function update_matrix_graphic()
 {
     var id_aux = 0;
@@ -187,7 +217,7 @@ function update_matrix_graphic()
         }
     
     const update_movements = document.getElementById("move");
-    update_movements.innerHTML = "Movimientos: " + movements/2;
+    update_movements.innerHTML = "Movimientos: " + movements;
 }
 
 function set_data_player()
@@ -207,30 +237,96 @@ function set_data_player()
 
 function verify_game()
 {
-    var estado = false;
+    var estado_lineal = false;
     var arr_correcto = new Array(matrix_size*matrix_size);
-    var arr_aux = new Array(matrix_size);
-    for(i = 0; i < (matrix_size*matrix_size)-1; i++)
+    for(i = 0; i < (matrix_cells_amount)-1; i++)
         arr_correcto[i] = (i+1);
     arr_correcto.push(0);
 
-    console.log(arr_correcto);
-
+    var aux;
     for(i = 0; i < matrix_size; i++)
-    {    
-        arr_aux = new Array(matrix_size);
+    {
         for(j = 0; j < matrix_size; j++)
         {
-            arr_aux[i][j] = game_matrix[i][j];
+            if(game_matrix[i][j] != arr_correcto[aux]) 
+            {
+                estado_lineal = false;
+                break;
+            }
+            else estado_lineal = true;
+            aux++;
         }
     }
 
+    var estado_caracol = verificación_Caracol();
+
+    if(estado_lineal || estado_caracol) alert("Ganaste con " + movimientos + "movimientos en " + n + "seegundos");
+    else console.log("Sigue jugando");
+}
+
+function crear_arreglo_caracol()
+{
+    var inicio = 0;
+    var nlimite = matrix_size-1;
+    var c = 1;
+
+    arreglo_caracol = new Array(matrix_size);
+    for(i = 0; i < matrix_size; i++)
+        arreglo_caracol[i] = new Array(matrix_size);
+    
+    while(c <= matrix_cells_amount)
+    {
+        for(x = inicio; x <= nlimite; x++)
+        {
+            arreglo_caracol[inicio][x] = c;
+            c++;
+        }
+        for(x = inicio + 1; x <= nlimite; x++)
+        {
+            arreglo_caracol[x][nlimite] = c;
+            c++;
+        }
+        for(x = nlimite -1; x >= inicio; x--)
+        {
+            arreglo_caracol[nlimite][x] = c;
+            c++
+        }
+        for(x = nlimite-1; x >= inicio + 1; x--)
+        {
+            arreglo_caracol[x][inicio] = c;
+            c++;
+        }
+        inicio = inicio + 1;
+        nlimite = nlimite - 1;
+    }
+    
     for(i = 0; i < matrix_size; i++)
     {
-        if(arr_aux[i] == arr_correcto[i]) estado = true;
-        else estado = false;
+        for(j = 0; j  < matrix_size; j++)
+        {
+            if(arreglo_caracol[i][j] == matrix_cells_amount) arreglo_caracol[i][j] = 0;
+        }
     }
 
-    if(estado) alert("Ganaste con " + movimientos + "movimientos en " + n + "seegundos");
-    else console.log("Sigue jugando");
+    console.log(arreglo_caracol);
+}
+
+function verificación_Caracol()
+{
+    console.log(arreglo_caracol);
+    var estado = false;
+    for(i =0; i < matrix_size; i++)
+    {
+        for(j =0; j< matrix_size; j++)
+        {
+            if(game_matrix[i][j] != arreglo_caracol[i][j])
+            {
+                estado = false;
+                break;
+            }
+            else estado = true;
+        }
+    }
+
+    return estado;
 }

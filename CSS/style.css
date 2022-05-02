@@ -25,12 +25,9 @@ body
     background-color: var(--blanco);
     margin: auto;
     margin-top: 5rem;
-    width: 42rem;
-    height: 42rem;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
     gap: .1rem;
+    padding: .3rem;
 }
 
 .celda
@@ -40,7 +37,7 @@ body
     background-color: var(--color_Celda);
     width: 10rem;
     height: 10rem;
-    margin: .2rem;
+    margin: auto;
     line-height: 10rem;
     text-align: center;
     font-size: x-large;
@@ -77,4 +74,43 @@ body
     font-size: 4rem;
     margin: auto;
     text-align: center;
+}
+
+.s4
+{
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(4,1fr);
+}
+
+.s5
+{
+    grid-template-columns: repeat(5,1fr);
+    grid-template-rows: repeat(5,1fr);
+}
+
+.s6
+{
+    grid-template-columns: repeat(6,1fr);
+    grid-template-rows: repeat(6,1fr);
+}
+
+.s7
+{
+    grid-template-columns: repeat(7,1fr);
+    grid-template-rows: repeat(7,1fr);
+}
+.s8
+{
+    grid-template-columns: repeat(8,1fr);
+    grid-template-rows: repeat(8,1fr);
+}
+.s9
+{
+    grid-template-columns: repeat(9,1fr);
+    grid-template-rows: repeat(9,1fr);
+}
+.s10
+{
+    grid-template-columns: repeat(10,1fr);
+    grid-template-rows: repeat(10,1fr);
 }
